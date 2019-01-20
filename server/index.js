@@ -7,6 +7,8 @@ const bodyParser = require('body-parser');
 const player = require('play-sound')(opts = {})
 
 let audio;
+let lastTotalWeight = 0;
+let totalWeight;
 
 app.use(bodyParser.json());
 
@@ -21,23 +23,32 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
+
 let listenToScale = true;
+
+app.get('/motion', (req, res) => {
+  console.log('Someone is in front of that camera!!!')
+  // playAlarm = true;
+  request('http://130.215.111.210:5000/turnOff')
+  res.send('hi');
+});
 
 app.post('/scale', (req, res) => {
   if (listenToScale) {
-    const threshHold = 40;
+    const threshHold = 5;
     console.log(req.body);
     let topLeft = req.body.TopLeft;
     let topRight = req.body.TopRight;
     let bottomRight = req.body.BottomRight;
     let bottomLeft = req.body.BottomLeft;
-    let totalWeight = req.body.TotalWeight;
+    totalWeight = req.body.TotalWeight;
     console.log("Yeah here is the bottm" + bottomRight)
     if (totalWeight > threshHold) {
       if (playAlarm) {
         turnOffAlarm();
       }
     }
+    lastTotalWeight = totalWeight;
   }
   res.send('POST has been recieved!!!')
 });
@@ -46,11 +57,14 @@ function turnOffAlarm() {
   // io.emit('turnOffAlarm');
   // audio.kill();
   console.log('switching off alarm.....')
-  try {
-    audio.kill();
-  } catch {
+  request('http://130.215.111.210:5000/turnOff')
+  // try {
 
-  }
+  //   audio.kill();
+  // } catch {
+
+  // }
+  totalWeight = 0;
   playAlarm = false;
 }
 
@@ -64,8 +78,10 @@ function setTimer(dateTarget, soc) {
       console.log('lets BLOW THIS ALARM UP!!!!')
       // soc.emit('playAlarm', { play: true })
       playAlarm = true;
-      audio = player.play('alarmSound.mp3', (err) => {
-      });
+      sawFirstMotion = false;
+      request('http://130.215.111.210:5000/turnOn')
+      // audio = player.play('alarmSound.mp3', (err) => {
+      // });
   }, dateObj.valueOf());
 }
 
@@ -93,7 +109,7 @@ io.on('setAlarmTime', (data) => {
 
 
 
-server.listen(8081, () => {
+server.listen(8080, () => {
   const port = server.address().port;
   console.log(`Example app listening on port: ${port}`);
 });

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View, TimePickerAndroid, Button, Alert } from 'react-native';
 import io from 'socket.io-client';
-const socket = io('https://mohm.serveo.net/');
+const socket = io('http://mohm.serveo.net/');
 
 
 export default class App extends React.Component {
