@@ -15,12 +15,17 @@ This project was adapted to also use a hacked Wii Balance Board as a preasure pl
 
 Server (express)
 ```
-npm start
+Install npm install
+Run: npm start
+Dev-Server: npm run dev
 ```
 
 App (react-native)
 ```
-npm start
+Install: npm install
+Run: npm start
+Run-Android: npm run android
+Run-IOS: npm run ios
 ```
 
 ## Deployment
