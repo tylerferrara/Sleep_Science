@@ -15,7 +15,7 @@ This project was adapted to also use a hacked Wii Balance Board as a preasure pl
 
 Server (express)
 ```
-Install npm install
+Install: npm install
 Run: npm start
 Dev-Server: npm run dev
 ```
